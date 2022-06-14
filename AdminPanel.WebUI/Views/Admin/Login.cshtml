@@ -1,0 +1,19 @@
+﻿@model AdminPanel.WebUI.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+@using (Html.BeginForm())
+{
+    @Html.EditorForModel()
+    <br />
+    <p><input type="submit" value="Log in" /></p>
+}
+
+<div>
+    <p>
+        @Html.ValidationSummary(true)
+    </p>
+</div>

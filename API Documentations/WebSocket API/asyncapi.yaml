@@ -1,0 +1,318 @@
+
+asyncapi: '2.4.0'
+
+#
+# Overal information for users of the application
+#
+info:
+  title: ChatSystem Websocket API
+  version: '1.0.0'
+  contact:
+    name: artistotless
+    url: https://github.com/artistotless
+  description: |
+    Публичный API веб-сокетного чат проекта.
+    
+#
+# Details on how to connect to the application
+#
+servers:
+  admin:
+    url: wss://localhost:5001/chat
+    protocol: wss
+    description: Endpoint для подключения операторов. Сведения о статусе авторизации оператора WebSocket сервер берет из HttpContext. Перед подключением, необходимо авторизоваться в админ панеле. https://localhost:5001/admin/login
+
+  player:
+    url: wss//localhost:5001/chat
+    protocol: wss
+    variables:
+      token:
+        # note! no enum here means it is an open value
+        description: Вставьте токен в url подключения к вебсокету - `wss//localhost:5001/chat?token={token}`
+ 
+    description: |
+      Endpoint для подключения игроков. Требуется token, который можно получить POST запросом [подробнее](https://localhost:5001/api/token)
+    
+
+#
+# Details about all the channels that you can listen to or send to messages
+#
+
+channels:
+  sendMessage:
+    servers: ["admin","player"]
+    publish:
+      description: | 
+        Отправить сообщение в чат
+      message:
+        oneOf:
+          - $ref: '#/components/messages/operatorMessage'
+          - $ref: '#/components/messages/playerMessage'
+
+
+  setMessageRead:
+    servers: ["admin"]
+    publish:
+      description: Отметить сообщение прочитанным
+      message:
+        oneOf:
+          - $ref: '#/components/messages/messageRead'
+
+          
+  getMessages:
+    servers: ["admin"]
+    publish:
+      description: Запросить список сообщений. 
+      message:
+        $ref: '#/components/messages/getMessages'
+    subscribe:
+      description: Получение запрошенных ранее сообщений
+      message:
+        $ref: '#/components/messages/incomeMessages'
+
+
+  chatMessage:
+    servers: ["admin","player"]
+    subscribe:
+      description: Получение нового сообщения.
+      message:
+        $ref: '#/components/messages/chatMessage'
+
+#
+# All reusable parts for readability and staying DRY
+#
+components:
+  messages:
+    playerMessage:
+      summary: Сообщение от игрока к операторам
+      payload:
+        $ref: '#/components/schemas/playerMessage'
+      examples:
+        - name: sendMessage
+          summary: Пример отправки сообщения игроку.
+          payload:
+            type: sendMessage
+            data: {
+            message: "Здравствуйте, у меня возникла проблема с.."
+            }
+        
+
+    operatorMessage:
+      summary: Сообщение от оператора к определенному игроку
+      payload:
+        $ref: '#/components/schemas/operatorMessage'
+      examples:
+        - name: sendMessage
+          summary: Пример отправки сообщения игроку.
+          payload:
+            type: sendMessage
+            data: {
+            playerId: 3,
+            message: "Пожалуйста ожидайте, я попробую вам помочь.."
+            }
+
+    messageRead:
+      summary: Прочитанное сообщение
+      payload:
+        $ref: '#/components/schemas/messageRead'
+      examples:
+        -
+          summary: Пример установка статуса "Прочитанное" сообщению
+          payload:
+            type: setMessageRead
+            data: {
+            messageId: 23
+            }
+
+    incomeMessages:
+      summary: Список запрошенных ранее сообщений
+      payload:  
+        $ref: '#/components/schemas/incomeMessages'
+      examples:
+        - name: Пример полученных сообщений.
+          summary: | 
+            В messages хранится массив данных типа `message`. Count содержит информацию о кол-ве сообщений по запросу - эта информация необходима для реализации пагинации.
+          payload:
+            type: getMessages
+            data: {
+            count: 0,
+            messages: [
+              {messageId: 36,             
+              text: hello,
+              timeStamp: 10.01.2022 10:40,
+              operator: {"name":"James"},
+              player: {"id":1,"name":"Dean"}
+              }]
+              }
+
+          
+
+    getMessages:
+      summary: Получение списка сообщений
+      payload:
+        description: |
+          По умолчанию (page=1) сервер возвращает 0 - N последних сообщений. При page=2, сервер вернет следующую порцию сообщений  N - N*2. Это необходимо для реализации пагинации.
+        $ref: '#/components/schemas/getMessages'
+      examples:
+        - name: Пример запроса 3 страницы сообщений в беседе с игроком playerId = 10
+          payload:
+            type: getMessages
+            data: {
+            page: 3,
+            playerId: 10
+            }
+
+        - name: Пример запроса 1 страницы сообщений от всех игроков
+          payload:
+              type: getMessages
+              data: {
+              page: 1,
+            }
+        - name: Пример запроса всех без исключения сообщений
+          payload:
+              type: getMessages
+              data: {
+            }
+
+    chatMessage:
+      summary: Новое сообщение
+      payload:
+        $ref: '#/components/schemas/message'
+      examples:
+        - name: Пример объекта отправленного игроку
+          payload:
+            type: chatMessage
+            data: { 
+            messageId: 29,
+            text: Hello World!,
+            timeStamp: 10.01.2020 13:00,
+            player: {},
+            operator: {"name":"lucas"}
+            }
+
+        - name: Пример объекта отправленного оператору
+          payload:
+            type: chatMessage
+            data: {
+            messageId: 29,
+            text: Hello World!,
+            timeStamp: 10.01.2020 13:00,
+            player: {"id":2,"name":"robin"},
+            operator: {}
+            }
+
+  schemas:
+    playerMessage:
+      type: object
+      allOf:
+        - properties:
+            message:
+              type: string
+              description: |
+                Ваше обращение в техподдержку
+          required:
+            - message
+        - $ref: '#/components/schemas/default'
+          
+
+    operatorMessage:
+      type: object
+      allOf:
+        - properties:
+            playerId:
+              type: integer
+              description: ID игрока, которому нужно отправить сообщение.
+            message:
+              type: string
+              description: Текстовое сообщение
+          required:
+            - playerId
+            - message
+        - $ref: '#/components/schemas/default'
+    default:
+      type: object
+      description: Этот объект всегда является частью полезной нагрузки.
+      required:
+         - type
+      properties:
+        type:
+          type: string
+          description: Тип запроса, например - sendMessage, setMessageRead и т.д
+
+    messageRead:
+      type: object
+      allOf:
+        - properties:
+            messageId:
+              type: integer
+              description: |
+                ID сообщения, которое нужно сделать прочитанным.
+          required:
+            - messageId
+        - $ref: '#/components/schemas/default'
+
+    getMessages:
+      type: object
+      allOf:
+        - properties:
+            page:
+              type: integer
+            playerId:
+              type: integer
+        - $ref: '#/components/schemas/default'
+
+    message:
+      type: object
+      allOf:
+        - properties:
+            messageId:
+              type: integer
+            text:
+              type: string
+            timeStamp:
+              type: string
+              format: dateTime
+            operator:
+              $ref: '#/components/schemas/operator'
+            player:
+              $ref: '#/components/schemas/player'
+
+          required:
+            - messageId
+            - text
+            - timeStamp
+            - player
+            - operator
+        - $ref: '#/components/schemas/default'
+
+    operator:
+      type: object
+      allOf:
+        - properties:
+            name:
+              type: string
+          required:
+            - name
+
+    player:
+      type: object
+      allOf:
+        - properties:
+            id:
+              type: integer
+            name:
+              type: string
+          required:
+            - name
+            - id
+
+    incomeMessages:
+      properties:
+        count:
+          type: integer
+      type: array
+      items:
+        count:
+          type: integer
+        $ref: '#/components/schemas/message'
+        

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AdminPanel.WebUI</name>
+    </assembly>
+    <members>
+        <member name="T:AdminPanel.WebUI.Controllers.API.MessageStatus">
+            <summary>
+            0 - Все, 1 - Непрочитанные, 2 - Прочитанные 
+            </summary>
+        </member>
+        <member name="M:AdminPanel.WebUI.Controllers.API.MessageController.Count(AdminPanel.WebUI.Controllers.API.MessageStatus)">
+            <summary>
+            Получение кол-ва cообщений
+            </summary>
+        </member>
+        <member name="M:AdminPanel.WebUI.Controllers.TokenController.Post(AdminPanel.WebUI.Models.PlayerRegister)">
+            <summary>
+            Получение токена игрока
+            </summary>
+        </member>
+        <member name="P:AdminPanel.WebUI.Models.PlayerRegister.Name">
+            <summary>
+            Имя игрока
+            </summary>
+        </member>
+        <member name="P:AdminPanel.WebUI.Models.PlayerRegister.HardWareInfo">
+            <summary>
+            Информация о железе устройства
+            </summary>
+        </member>
+    </members>
+</doc>

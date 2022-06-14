@@ -1,0 +1,148 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+    color: #0366d6;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
+}
+
+#dialogWindow {
+    padding: 20px;
+    border-radius: 10px;
+    background: #dddfe1;
+    margin-top: 25px;
+}
+
+#chatInput {
+    background: #f9f9f9;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    color: #565656;
+}
+
+#chatBtn {
+    margin-bottom: 20px;
+    background: #363636;
+    border: none;
+    color: #bbbbbb;
+    margin-left: 6px;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+#messages {
+    margin: 0;
+    padding-left: 10px;
+}
+
+#pager {
+    width: 100%;
+    display: flex;
+    margin-top: 5px;
+    align-items: center;
+    justify-content: end;
+}
+
+.selected {
+    background: #2c2c2c;
+    border: none;
+    margin-right: 3px;
+    color: white;
+}
+
+.pageBtn {
+    background: #b3b3b3;
+    border: none;
+    margin-right: 3px;
+}
+
+#loading {
+    background-image: url("../img/loader.gif");
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 40px;
+    height: 30px;
+    margin-left: 11px;
+}
+
+.message {
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.readBtn {
+    float: right;
+    font-size: 12px;
+    border: none;
+    border-radius: 5px;
+    margin: 3px;
+}

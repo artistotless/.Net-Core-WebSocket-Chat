@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+<h1>Привет, @User.Identity.Name</h1>
+<br />
+<p>Имя: @User.Identity.Name</p>
+<p>Роль: @User.FindFirst(System.Security.Claims.ClaimsIdentity.DefaultRoleClaimType).Value</p>
+<p>Email: @User.FindFirst("Email").Value</p>
+<p>@Html.ActionLink("Выйти из аккаунта", "Logout")</p>
+
+

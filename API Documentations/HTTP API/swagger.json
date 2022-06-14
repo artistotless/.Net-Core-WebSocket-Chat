@@ -1,0 +1,125 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Test API",
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/Message/Count/{status}": {
+            "get": {
+                "tags": [
+                    "Message"
+                ],
+                "summary": "Получение кол-ва cообщений",
+                "parameters": [{
+                    "name": "status",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/components/schemas/MessageStatus"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer"
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Token": {
+            "post": {
+                "tags": [
+                    "Token"
+                ],
+                "summary": "Получение токена игрока",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PlayerRegister"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PlayerRegister"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PlayerRegister"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation Problem",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "title": { "type": "string" },
+                                        "status": { "type": "integer" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "MessageStatus": {
+                "enum": [
+                    0,
+                    1,
+                    2
+                ],
+                "type": "integer",
+                "description": "0 - Все, 1 - Непрочитанные, 2 - Прочитанные",
+                "format": "int32"
+            },
+            "PlayerRegister": {
+                "required": [
+                    "hardWareInfo",
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "maxLength": 16,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Имя игрока"
+                    },
+                    "hardWareInfo": {
+                        "type": "string",
+                        "description": "Информация о железе устройства"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    }
+}

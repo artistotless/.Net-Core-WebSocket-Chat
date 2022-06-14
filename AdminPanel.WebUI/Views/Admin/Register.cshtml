@@ -1,0 +1,19 @@
+﻿@model AdminPanel.WebUI.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Register</h1>
+
+
+@using (Html.BeginForm())
+{
+    @Html.EditorForModel()
+    <br />
+    <p><input type="submit" value="Register" /></p>
+}
+<div>
+    <p>
+        @Html.ValidationSummary(true)
+    </p>
+</div>

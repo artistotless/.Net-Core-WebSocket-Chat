@@ -1,0 +1,19 @@
+﻿@model IEnumerable<AdminPanel.Domain.Entities.Message>
+@{
+    ViewData["Title"] = "Cписок диалогов";
+}
+
+<h1>Диалоги</h1>
+
+<body>
+    <div id="dialogWindow">
+        @foreach (var message in Model)
+        {<div class="dialogItem">
+                @Html.ActionLink($"id: {message.PlayerID} | {message.Player.Name} | {message.Text}",
+               "Show", "Dialog", new { playerId = message.PlayerID })
+            </div>
+        }
+    </div>
+</body>
+
+

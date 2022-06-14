@@ -1,0 +1,74 @@
+﻿@model int
+@using AdminPanel.WebUI.Helpers
+@{
+    ViewData["Title"] = "Диалог";
+}
+
+<h1>Диалог</h1>
+
+<body>
+    <div id="pager"></div>
+    <div id="dialogWindow">
+        <input type=text id="chatInput" placeholder="Ваше сообщение.." />
+        <button style="margin-bottom:20px" id="chatBtn">Отправить</button>
+        <ul id="messages">
+            <div id="connection" style="display: flex;">Connecting ... <div id="loading" /></div>
+        </ul>
+    </div>
+</body>
+
+
+<script>
+
+    var pageSize = 10;
+    var messagesCount = 0;
+    var currentPage = 1;
+
+    var uri = "wss://" + window.location.host + "/chat";
+    connect(uri);
+
+
+    server.bind('open', function () {
+        $('#connection').toggle();
+        prepend("Connected!");
+        getMessages(1);
+    });
+
+    server.bind('getMessages', function (data) {
+        clear();
+        messagesCount = data['count'];
+        setHtmlPages(currentPage, messagesCount / pageSize);
+        data['messages'].forEach(element => {
+            addMessage(element, isAppend=true)
+        });
+    });
+
+    server.bind('chatMessage', function (data) {
+        if (data.player == null || data.player.id == @Model) {
+            addMessage(data, isAppend = false);
+        }
+    });
+
+function getMessages(page) {
+	var data = {
+		"page": page,
+		"playerId":@Model
+	};
+    server.send("getMessages", data);
+    currentPage = page;
+    }
+
+
+</script>
+
+@if (User.HasClaim("CanCreate", "True"))
+{
+    <script>
+        var button = document.getElementById("chatBtn");
+        button.addEventListener("click", function () {
+            var input = document.getElementById("chatInput");
+            sendMessage(input.value, @Model);
+            input.value = "";
+        });
+    </script>
+}
